@@ -10,18 +10,21 @@ data <- read.csv("activity.csv")
 
 
 
-##What is mean total number of steps taken per day?
+###What is mean total number of steps taken per day?
 ```{r}
 library(ggplot2)
 total.steps <- tapply(data$steps, data$date, FUN=sum, na.rm=TRUE)
 qplot(total.steps, binwidth=1000, xlab="Total Number of Steps taken per Day")
+## Saving Plot1 to file
+dev.copy(png, file="plot1.png", height=480, width=480)
+dev.off()
 mean(total.steps, na.rm=TRUE)
 median(total.steps, na.rm=TRUE)
 ```
 
 
 
-##What is the average daily activity pattern?
+###What is the average daily activity pattern?
 ```{r}
 library(ggplot2)
 averages <- aggregate(x=list(steps=data$steps), by=list(interval=data$interval),
@@ -30,6 +33,9 @@ ggplot(data=averages, aes(x=interval, y=steps)) +
     geom_line() +
     xlab("5-Minute Interval") +
     ylab("Average Number of Steps Taken")
+## Saving Plot2 to file
+dev.copy(png, file="plot2.png", height=480, width=480)
+dev.off()
 ```
 
 
@@ -68,10 +74,13 @@ filled.data$steps <- mapply(fill.value, filled.data$steps, filled.data$interval)
 
 
 
-###Let's make a histogram of the total number of steps taken each day and calculate the mean and median total number of steps using the filled data set.
+####Let's make a histogram of the total number of steps taken each day and calculate the mean and median total number of steps using the filled data set.
 ```{r}
 total.steps <- tapply(filled.data$steps, filled.data$date, FUN=sum)
 qplot(total.steps, binwidth=1000, xlab="Total Number of Steps Taken per Day")
+## Saving Plot3 to file
+dev.copy(png, file="plot3.png", height=480, width=480)
+dev.off()
 mean(total.steps)
 median(total.steps)
 ```
@@ -82,7 +91,11 @@ median(total.steps)
 
 
 ###Are there differences in activity patterns between weekdays and weekends?
-##Let's first find the day of the week for each measurement in the dataset. In this part, we use the dataset with the filled-in values.
+
+#
+#
+
+####Let's first find the day of the week for each measurement in the dataset. In this part, we use the dataset with the filled-in values.
 ```{r}
 weekday.or.weekend <- function(date) {
     day <- weekdays(date)
@@ -98,9 +111,12 @@ filled.data$day <- sapply(filled.data$date, FUN=weekday.or.weekend)
 ```
 
 
-##Making a panel plot containing plots of average number of steps taken on weekdays and weekends
+####Making a panel plot containing plots of average number of steps taken on weekdays and weekends
 ```{r}
 averages <- aggregate(steps ~ interval + day, data=filled.data, mean)
 ggplot(averages, aes(interval, steps)) + geom_line() + facet_grid(day ~ .) +
     xlab("5-minute interval") + ylab("Number of steps")
+## Saving Plot4 to file
+dev.copy(png, file="plot4.png", height=480, width=480)
+dev.off()
 ```
